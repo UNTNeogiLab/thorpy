@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thorpy.stages &#8212; thorpy 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.stages</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for thorpy.stages</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">thorpy.message</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+
+<span class="k">def</span> <span class="nf">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;If you see this message, please send a mail with the following information: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+          <span class="s1">&#39;- controller type</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+          <span class="s1">&#39;- stage type</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+          <span class="s1">&#39;- this data: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">file</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+<div class="viewcode-block" id="stage_name_from_get_hw_info"><a class="viewcode-back" href="../../api.html#thorpy.stages.stage_name_from_get_hw_info">[docs]</a><span class="k">def</span> <span class="nf">stage_name_from_get_hw_info</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="n">controller_type</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s1">&#39;serial_number&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="mi">1000000</span>  <span class="c1">#v7</span>
+    <span class="n">stage_type</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s1">&#39;empty_space&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>  <span class="c1">#Reverse engineered</span>
+    <span class="n">hw_version</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s1">&#39;hw_version&#39;</span><span class="p">]</span>
+    <span class="n">model_number</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s1">&#39;model_number&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">hw_version</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;HS ZST6(B)&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;ZST6(B)&#39;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">2197</span><span class="p">):</span>
+        <span class="c1">#Info obtained from thorlabs technical support</span>
+        <span class="k">if</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x01</span><span class="p">:</span>
+            <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1">#Open circuit - no motor connected.</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x02</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;Z706&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x03</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;Z712&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x04</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;Z725&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x05</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;CR1-Z7&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x06</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;PRM1-Z8&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x07</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;MTS25-Z8&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x08</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;MTS50-Z8&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x09</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;Z825&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x0A</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;Z812&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x0B</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;Z806&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mh">0x0C</span><span class="p">:</span>
+            <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1">#Non Thorlabs motor.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#This is reverse engineered...</span>
+            <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;Z606(B)&#39;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">43</span><span class="p">,</span> <span class="mi">93</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;DRV414&#39;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">94</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;MLS203 X&#39;</span>
+        <span class="k">elif</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mi">17</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;MLS203 Y&#39;</span>
+        <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">model_number</span> <span class="o">==</span> <span class="s1">&#39;LTS150&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;HS LTS150 150mm Stage&#39;</span>
+        <span class="k">elif</span> <span class="n">model_number</span> <span class="o">==</span> <span class="s1">&#39;LTS300&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;HS LTS300 300mm Stage&#39;</span>
+        <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;L490MZ Labjack&quot;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">47</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;FW105 Filter Wheel&quot;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;K100CR1 Rotation Stage&quot;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">49</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;MLJ050 Labjack&quot;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">37</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;MFF Filter Flipper&quot;</span>
+    <span class="k">elif</span> <span class="n">controller_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">67</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">stage_type</span> <span class="o">==</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;MVS005MZ&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;DDSM100&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_print_stage_detection_improve_message</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="GenericStage"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage">[docs]</a><span class="k">class</span> <span class="nc">GenericStage</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">chan_ident</span><span class="p">,</span> <span class="n">ini_section</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">configparser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span> <span class="o">=</span> <span class="n">chan_ident</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="n">pkgutil</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s1">&#39;thorpy.stages&#39;</span><span class="p">,</span><span class="s1">&#39;MG17APTServer.ini&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">ini_section</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_stage_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Stage ID&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_axis_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Axis ID&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Units&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pitch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pitch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dir_sense</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Dir Sense&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_min_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Min Pos&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_max_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Max Pos&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_def_min_vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Def Min Vel&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_def_accn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Def Accn&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_def_max_vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Def Max Vel&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_max_accn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Max Accn&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_def_accn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Def Accn&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_max_vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Max Vel&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_backlash_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Backlash Dist&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_move_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Move Factor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_rest_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Rest Factor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_cw_hard_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;CW Hard Limit&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_ccw_hard_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;CCW Hard Limit&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_cw_soft_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;CW Soft Limit&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_ccw_soft_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;CCW Soft Limit&#39;</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_soft_limit_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Soft Limit Mode&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_home_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Home Dir&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_home_limit_switch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Home Limit Switch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_home_vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Home Vel&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_home_zero_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Home Zero Offset&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_jog_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Jog Mode&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_jog_step_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Jog Step Size&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_jog_min_vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Jog Min Vel&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_jog_accn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Jog Accn&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_jog_max_vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Jog Max Vel&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_jog_stop_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Jog Stop Mode&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_steps_per_rev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Steps Per Rev&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_gearbox_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Gearbox Ratio&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dc_servo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;DC Servo&#39;</span><span class="p">,</span> <span class="n">fallback</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dc_servo</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dc_prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;DC Prop&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dc_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;DC Int&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dc_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;DC Diff&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dc_intlim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;DC IntLim&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_fp_controls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;FP Controls&#39;</span><span class="p">,</span> <span class="n">fallback</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_fp_controls</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_zero_wnd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Zero Wnd&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_vel_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Vel 1&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_wnd_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Wnd 1&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_vel_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Vel 2&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_wnd_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Wnd 2&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_vel_3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Vel 3&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_wnd_3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Wnd 3&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pot_vel_4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Pot Vel 4&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_button_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Button Mode&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_button_pos_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Button Pos 1&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_button_pos_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;Button Pos 2&#39;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_js_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;JS Params&#39;</span><span class="p">,</span> <span class="n">fallback</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_js_params</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_js_gearlow_maxvel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;JS GearLow MaxVel&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_js_gearlow_accn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;JS GearLow Accn&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conf_js_dir_sense</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">ini_section</span><span class="p">,</span> <span class="s1">&#39;JS Dir Sense&#39;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_ack_sent</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOD_SET_CHANENABLESTATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">,</span> <span class="n">chan_enable_state</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">))</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test: &quot;</span><span class="o">+</span><span class="s2">&quot;Constructed: </span><span class="si">{0!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        
+        <span class="c1">#STATUSUPDATE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_position</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#VELPARAMS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_min_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_max_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_acceleration</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#HOMEPARAMS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_direction</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_limit_switch</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_offset_distance</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Destructed: </span><span class="si">{0!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        
+    <span class="k">def</span> <span class="nf">_handle_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_ack_sent</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOT_ACK_DCSTATUSUPDATE</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_ack_sent</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_GET_DCSTATUSUPDATE</span><span class="p">)</span> <span class="ow">or</span> \
+           <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_GET_STATUSUPDATE</span><span class="p">)</span> <span class="ow">or</span> \
+           <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_MOVE_COMPLETED</span><span class="p">):</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_position</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_GET_DCSTATUSUPDATE</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_state_velocity</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;status_bits&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_MOVE_HOMED</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_GET_VELPARAMS</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_min_velocity</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;min_velocity&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_max_velocity</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;max_velocity&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_acceleration</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">MGMSG_MOT_GET_HOMEPARAMS</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_direction</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;home_direction&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_limit_switch</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;limit_switch&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_velocity</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;home_velocity&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_offset_distance</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;offset_distance&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="kc">True</span>
+            
+        
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="c1">#STATUSUPDATE</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_position&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_position</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span>
+
+    <span class="nd">@position</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_value</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="n">absolute_distance</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOT_MOVE_ABSOLUTE_long</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">,</span> <span class="n">absolute_distance</span> <span class="o">=</span> <span class="n">absolute_distance</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_velocity&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_velocity</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span><span class="p">)</span>  <span class="c1">#Dropped the 65536 factor, which resulted in false results</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_forward_hardware_limit_switch_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_reverse_hardware_limit_switch_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000002</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_in_motion_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000010</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_in_motion_reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000020</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_in_motion_jogging_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000040</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_in_motion_jogging_reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000080</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_in_motion_homing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000200</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_homed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00000400</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_tracking</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00001000</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_settled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00002000</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_motion_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x00004000</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_motor_current_limit_reached</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x01000000</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_channel_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_status_bits&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_status_bits</span> <span class="o">&amp;</span> <span class="mh">0x80000000</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+    
+    <span class="c1">#VELPARAMS</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">min_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_min_velocity&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_VELPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_min_velocity</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_max_velocity&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_VELPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_max_velocity</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_acceleration&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_VELPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_acceleration</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)</span>
+    
+    <span class="nd">@min_velocity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">min_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_velparams</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">new_value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_velocity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">)</span>
+
+    <span class="nd">@max_velocity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">max_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_velparams</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_velocity</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">)</span>
+
+    <span class="nd">@acceleration</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_velparams</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_velocity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_velocity</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_set_velparams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_velocity</span><span class="p">,</span> <span class="n">max_velocity</span><span class="p">,</span> <span class="n">acceleration</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">MGMSG_MOT_SET_VELPARAMS</span><span class="p">(</span>
+            <span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">,</span>
+            <span class="n">min_velocity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">min_velocity</span> <span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)),</span>
+            <span class="n">max_velocity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_velocity</span> <span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)),</span>
+            <span class="n">acceleration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">acceleration</span> <span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1">#Invalidate current values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_min_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_max_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_acceleration</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        
+    <span class="c1">#HOMEPARAMS</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">home_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_home_velocity&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_HOMEPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_velocity</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)</span>
+    
+    <span class="nd">@home_velocity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">home_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_homeparams</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">new_value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_direction</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_limit_switch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_offset_distance</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">home_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_home_direction&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_HOMEPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_direction</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">home_limit_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_home_limit_switch&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_HOMEPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_limit_switch</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">home_offset_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_properties</span><span class="p">((</span><span class="s1">&#39;_state_home_offset_distance&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MGMSG_MOT_REQ_HOMEPARAMS</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_offset_distance</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span>
+    
+    <span class="k">def</span> <span class="nf">_set_homeparams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">home_velocity</span><span class="p">,</span> <span class="n">home_direction</span><span class="p">,</span> <span class="n">home_limit_switch</span><span class="p">,</span> <span class="n">home_offset_distance</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">MGMSG_MOT_SET_HOMEPARAMS</span><span class="p">(</span> 
+            <span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">,</span>
+            <span class="n">home_velocity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">home_velocity</span> <span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">*</span> <span class="mi">65536</span><span class="p">)),</span>
+            <span class="n">home_direction</span> <span class="o">=</span> <span class="n">home_direction</span><span class="p">,</span>
+            <span class="n">limit_switch</span> <span class="o">=</span> <span class="n">home_limit_switch</span><span class="p">,</span>
+            <span class="n">offset_distance</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">home_offset_distance</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_EncCnt</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1">#Invalidate current values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_velocity</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_direction</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_limit_switch</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_home_offset_distance</span> <span class="o">=</span> <span class="kc">None</span>
+
+    
+    <span class="c1">#Conversion factors</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_EncCnt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_steps_per_rev</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_gearbox_ratio</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_pitch</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2048</span> <span class="o">/</span> <span class="mf">6e6</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">units</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;°&#39;</span><span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">_conf_units</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="GenericStage.print_state"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage.print_state">[docs]</a>    <span class="k">def</span> <span class="nf">print_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stage: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Position: </span><span class="si">{0:0.03f}{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">))</span>
+        <span class="c1"># Velocity information not available with some stages, e.g. LTS300</span>
+        <span class="c1">#print(&quot;Velocity: {0:0.03f}{1}/s&quot;.format(self.velocity, self.units))</span>
+        
+        <span class="n">flags</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_forward_hardware_limit_switch_active</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;forward hardware limit switch is active&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_reverse_hardware_limit_switch_active</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;reverse hardware limit switch is active&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_forward</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_reverse</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_jogging_forward</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_jogging_reverse</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_homing</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;in motion&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_forward</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;moving forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_reverse</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;moving reverse&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_jogging_forward</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;jogging forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_jogging_reverse</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;jogging reverse&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_homing</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;homing&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_homed</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;homed&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_tracking</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;tracking&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_settled</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;settled&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_motion_error</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;motion error&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_motor_current_limit_reached</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;motor current limit reached&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_channel_enabled</span><span class="p">:</span>
+            <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;channel enabled&#39;</span><span class="p">)</span>
+            
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">flags</span><span class="p">)))</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Velocity parameters: velocity: </span><span class="si">{0.min_velocity:0.3f}</span><span class="s2">-</span><span class="si">{0.max_velocity:0.3f}{0.units}</span><span class="s2">/s, acceleration: </span><span class="si">{0.acceleration:0.3f}{0.units}</span><span class="s2">/s²&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Homing parameters: velocity: </span><span class="si">{0.home_velocity:0.3f}{0.units}</span><span class="s2">/s, direction: </span><span class="si">{0.home_direction}</span><span class="s2">, limit_switch: </span><span class="si">{0.home_limit_switch}</span><span class="s2">, offset_distance: </span><span class="si">{0.home_offset_distance:0.3f}{0.units}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+        
+<div class="viewcode-block" id="GenericStage.home"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage.home">[docs]</a>    <span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_homed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_homed</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_forward</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_in_motion_reverse</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOT_MOVE_HOME</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="GenericStage.home_non_blocking"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage.home_non_blocking">[docs]</a>    <span class="k">def</span> <span class="nf">home_non_blocking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_homed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOT_MOVE_HOME</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">))</span>     
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_wait_for_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">message_repeat_timeout</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">last_message_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">any</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">last_message_time</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">message_repeat_timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">last_message_time</span> <span class="o">&gt;</span> <span class="n">message_repeat_timeout</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="n">last_message_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&gt;=</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+        
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{0}</span><span class="s1"> on </span><span class="si">{1!r}</span><span class="s1"> channel </span><span class="si">{2}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">)</span>
+ 
+
+<div class="viewcode-block" id="GenericStage.identify"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage.identify">[docs]</a>    <span class="k">def</span> <span class="nf">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOD_IDENTIFY</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="GenericStage.move_jog_forward"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage.move_jog_forward">[docs]</a>    <span class="k">def</span> <span class="nf">move_jog_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOT_MOVE_JOG</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="GenericStage.move_jog_backward"><a class="viewcode-back" href="../../api.html#thorpy.stages.GenericStage.move_jog_backward">[docs]</a>    <span class="k">def</span> <span class="nf">move_jog_backward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">MGMSG_MOT_MOVE_JOG</span><span class="p">(</span><span class="n">chan_ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chan_ident</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="mh">0x02</span><span class="p">))</span></div></div>
+
+       
+
+<span class="c1">#Message which should maybe be implemented?</span>
+<span class="c1">#Should be in port: MGMSG_HUB_REQ_BAYUSED, MGMSG_HUB_GET_BAYUSED,</span>
+<span class="c1">#Really useful? MGMSG_MOT_SET_POSCOUNTER, MGMSG_MOT_REQ_POSCOUNTER, MGMSG_MOT_GET_POSCOUNTER, MGMSG_MOT_SET_ENCCOUNTER, MGMSG_MOT_REQ_ENCCOUNTER, MGMSG_MOT_GET_ENCCOUNTER, </span>
+<span class="c1">#MGMSG_MOT_SET_JOGPARAMS, MGMSG_MOT_REQ_JOGPARAMS, MGMSG_MOT_GET_JOGPARAMS, MGMSG_MOT_SET_GENMOVEPARAMS, MGMSG_MOT_REQ_GENMOVEPARAMS, MGMSG_MOT_GET_GENMOVEPARAMS, MGMSG_MOT_SET_MOVERELPARAMS, MGMSG_MOT_REQ_MOVERELPARAMS, MGMSG_MOT_GET_MOVERELPARAMS, MGMSG_MOT_SET_MOVEABSPARAMS, MGMSG_MOT_REQ_MOVEABSPARAMS, MGMSG_MOT_GET_MOVEABSPARAMS, MGMSG_MOT_SET_HOMEPARAMS, MGMSG_MOT_REQ_HOMEPARAMS, MGMSG_MOT_GET_HOMEPARAMS, MGMSG_MOT_SET_LIMSWITCHPARAMS, MGMSG_MOT_REQ_LIMSWITCHPARAMS, MGMSG_MOT_GET_LIMSWITCHPARAMS, MGMSG_MOT_MOVE_HOME, MGMSG_MOT_MOVE_HOMED, MGMSG_MOT_MOVE_RELATIVE_short,MGMSG_MOT_MOVE_RELATIVE_long, MGMSG_MOT_MOVE_COMPLETED, MGMSG_MOT_MOVE_ABSOLUTE_short,MGMSG_MOT_MOVE_ABSOLUTE_long, MGMSG_MOT_MOVE_JOG, MGMSG_MOT_MOVE_VELOCITY, MGMSG_MOT_MOVE_STOP, MGMSG_MOT_MOVE_STOPPED, MGMSG_MOT_SET_DCPIDPARAMS, MGMSG_MOT_REQ_DCPIDPARAMS, MGMSG_MOT_GET_DCPIDPARAMS, MGMSG_MOT_SET_AVMODES, MGMSG_MOT_REQ_AVMODES, MGMSG_MOT_GET_AVMODES, MGMSG_MOT_SET_POTPARAMS, MGMSG_MOT_REQ_POTPARAMS, MGMSG_MOT_GET_POTPARAMS, MGMSG_MOT_SET_BUTTONPARAMS, MGMSG_MOT_REQ_BUTTONPARAMS, MGMSG_MOT_GET_BUTTONPARAMS, MGMSG_MOT_SET_EEPROMPARAMS, MGMSG_MOT_REQ_DCSTATUSUPDATE, MGMSG_MOT_GET_DCSTATUSUPDATE, MGMSG_MOT_ACK_DCSTATUSUPDATE, MGMSG_MOT_REQ_STATUSBITS, MGMSG_MOT_GET_STATUSBITS, MGMSG_MOT_SUSPEND_ENDOFMOVEMSGS, MGMSG_MOT_RESUME_ENDOFMOVEMSGS</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.stages</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Laurent Fasnacht.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

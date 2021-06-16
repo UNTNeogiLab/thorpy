@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>API Documentation &#8212; thorpy 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Messages API documentation" href="apimessages.html" />
+    <link rel="prev" title="Welcome to thorpy’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="apimessages.html" title="Messages API documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to thorpy’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API Documentation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="api-documentation">
+<span id="api"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<section id="module-thorpy.stages">
+<span id="stage"></span><h2>Stage<a class="headerlink" href="#module-thorpy.stages" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="thorpy.stages.stage_name_from_get_hw_info">
+<span class="sig-prename descclassname"><span class="pre">thorpy.stages.</span></span><span class="sig-name descname"><span class="pre">stage_name_from_get_hw_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#stage_name_from_get_hw_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.stage_name_from_get_hw_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">thorpy.stages.</span></span><span class="sig-name descname"><span class="pre">GenericStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_ident</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ini_section</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.position">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.velocity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">velocity</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_forward_hardware_limit_switch_active">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_forward_hardware_limit_switch_active</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_forward_hardware_limit_switch_active" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_reverse_hardware_limit_switch_active">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_reverse_hardware_limit_switch_active</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_reverse_hardware_limit_switch_active" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_in_motion_forward">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_in_motion_forward</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_in_motion_forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_in_motion_reverse">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_in_motion_reverse</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_in_motion_reverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_in_motion_jogging_forward">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_in_motion_jogging_forward</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_in_motion_jogging_forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_in_motion_jogging_reverse">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_in_motion_jogging_reverse</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_in_motion_jogging_reverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_in_motion_homing">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_in_motion_homing</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_in_motion_homing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_homed">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_homed</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_homed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_tracking">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_tracking</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_tracking" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_settled">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_settled</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_settled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_motion_error">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_motion_error</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_motion_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_motor_current_limit_reached">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_motor_current_limit_reached</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_motor_current_limit_reached" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.status_channel_enabled">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_channel_enabled</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.status_channel_enabled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.min_velocity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">min_velocity</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.min_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.max_velocity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">max_velocity</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.max_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.acceleration">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">acceleration</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.acceleration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.home_velocity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">home_velocity</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.home_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.home_direction">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">home_direction</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.home_direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.home_limit_switch">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">home_limit_switch</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.home_limit_switch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.home_offset_distance">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">home_offset_distance</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.home_offset_distance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.units">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">units</span></span><a class="headerlink" href="#thorpy.stages.GenericStage.units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.print_state">
+<span class="sig-name descname"><span class="pre">print_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage.print_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage.print_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.home">
+<span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage.home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage.home" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.home_non_blocking">
+<span class="sig-name descname"><span class="pre">home_non_blocking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage.home_non_blocking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage.home_non_blocking" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.identify">
+<span class="sig-name descname"><span class="pre">identify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage.identify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage.identify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.move_jog_forward">
+<span class="sig-name descname"><span class="pre">move_jog_forward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage.move_jog_forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage.move_jog_forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thorpy.stages.GenericStage.move_jog_backward">
+<span class="sig-name descname"><span class="pre">move_jog_backward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/thorpy/stages.html#GenericStage.move_jog_backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thorpy.stages.GenericStage.move_jog_backward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Documentation</a><ul>
+<li><a class="reference internal" href="#module-thorpy.stages">Stage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to thorpy’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apimessages.html"
+                        title="next chapter">Messages API documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="apimessages.html" title="Messages API documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to thorpy’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API Documentation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Laurent Fasnacht.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

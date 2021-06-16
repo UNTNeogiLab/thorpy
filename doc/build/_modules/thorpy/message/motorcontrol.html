@@ -1,0 +1,1813 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thorpy.message.motorcontrol &#8212; thorpy 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.message.motorcontrol</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for thorpy.message.motorcontrol</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">Message</span>
+
+
+<span class="c1">###### MOTOR CONTROL MESSAGES ######</span>
+
+<div class="viewcode-block" id="MGMSG_HW_NO_FLASH_PROGRAMMING"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_HW_NO_FLASH_PROGRAMMING">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_NO_FLASH_PROGRAMMING</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This message is sent on start up to notify the controller of the</span>
+<span class="sd">        source and destination addresses. A client application must send</span>
+<span class="sd">        this message as part of its initialization process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x18</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_YES_FLASH_PROGRAMMING"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_HW_YES_FLASH_PROGRAMMING">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_YES_FLASH_PROGRAMMING</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This message is sent by the server on start up, however, it is a</span>
+<span class="sd">        deprecated message (i.e. has no function) and can be ignored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x17</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_ACK_DCSTATUSUPDATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_ACK_DCSTATUSUPDATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_ACK_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Only Applicable If Using USB COMMS. Does not apply to RS-232 COMMS</span>
+
+<span class="sd">        If using the USB port, this message called “server alive” must be sent</span>
+<span class="sd">        by the server to the controller at least once a second or the</span>
+<span class="sd">        controller will stop responding after ~50 commands.</span>
+<span class="sd">        The controller keeps track of the number of &quot;status update&quot; type of</span>
+<span class="sd">        messages (e.g.move complete message) and it if has sent 50 of</span>
+<span class="sd">        these without the server sending a &quot;server alive&quot; message, it will</span>
+<span class="sd">        stop sending any more &quot;status update&quot; messages.</span>
+<span class="sd">        This function is used by the controller to check that the PC/Server</span>
+<span class="sd">        has not crashed or switched off. There is no response.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x492</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_ADCINPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_ADCINPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_ADCINPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_REQ_ADCINPUTS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param adc_input1: The voltage state of the analog input pin, in the range 0 to</span>
+<span class="sd">            32768, which corresponds to zero to 5 V.</span>
+<span class="sd">        :type adc_input2: int</span>
+<span class="sd">        :param adc_input2: Not used.</span>
+<span class="sd">        :type adc_input2: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x42c</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;adc_input1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;adc_input2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_AVMODES"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_AVMODES">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_AVMODES</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_AVMODES`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode_bits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b5</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_BOWINDEX"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_BOWINDEX">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_BOWINDEX</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_BOWINDEX`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param bow_index: This parameter is used to set the profile mode to either</span>
+<span class="sd">            Trapezoidal or S-curve. A Bow Index of ‘0’ selects a</span>
+<span class="sd">            trapezoidal profile. An index value of ‘1’ to ‘18’ selects an S-</span>
+<span class="sd">            curve profile.</span>
+<span class="sd">        :type bow_index: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4f6</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;bow_index&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_BUTTONPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_BUTTONPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_BUTTONPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_BUTTONPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode</span>
+<span class="sd">        - position1</span>
+<span class="sd">        - position2</span>
+<span class="sd">        - timeout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b8</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position1&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position2&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_DCPIDPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_DCPIDPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_DCPIDPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_GET_DCPIDPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - proportional</span>
+<span class="sd">        - integral</span>
+<span class="sd">        - differential</span>
+<span class="sd">        - integral_limit</span>
+<span class="sd">        - filter_control</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4a2</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;proportional&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;integral&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;differential&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;integral_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;filter_control&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_DCSTATUSUPDATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_DCSTATUSUPDATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This message is returned when a status update is requested for the</span>
+<span class="sd">        specified motor channel. This request can be used instead of</span>
+<span class="sd">        enabling regular updates as described above.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - position</span>
+<span class="sd">        - velocity</span>
+<span class="sd">        - status_bits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x491</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;status_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_ENCCOUNTER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_ENCCOUNTER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_ENCCOUNTER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_ENCCOUNTER`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param encoder_count: The new value of the encoder counter.</span>
+<span class="sd">        :type encoder_count: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x40b</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;encoder_count&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_GENMOVEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_GENMOVEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_GENMOVEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_GENMOVEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param backlash_distance: The value of the backlash distance. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type backlash_distance: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x43c</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;backlash_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_HOMEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_HOMEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_HOMEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_GET_HOMEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param home_direction: Ignored in current implementation (0x01=forward, 0x02=reverse)</span>
+<span class="sd">        :type home_direction: int</span>
+<span class="sd">        :param limit_switch: Ignored in current implementation</span>
+<span class="sd">        :type limit_switch: int</span>
+<span class="sd">        :param home_velocity: The homing velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type home_velocity: int</span>
+<span class="sd">        :param offset_distance: Not used in current implementation. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type offset_distance: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x442</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;home_direction&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;limit_switch&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;home_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;offset_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_JOGPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_JOGPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_JOGPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_JOGPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param jog_mode: continuous (0x01) or single step (0x02) jogging.</span>
+<span class="sd">        :type jog_mode: int</span>
+<span class="sd">        :param jog_step_size: The jog step size. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_step_size: int</span>
+<span class="sd">        :param jog_min_velocity: The minimum (start) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_min_velocity: int</span>
+<span class="sd">        :param jog_acceleration: The acceleration. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_acceleration: int</span>
+<span class="sd">        :param jog_max_velocity: The maxium (final) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_max_velocity: int</span>
+<span class="sd">        :param jog_stop_mode: abrupt stop (0x01) or profiled stop (0x02).</span>
+<span class="sd">        :type jog_stop_mode: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x418</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_step_size&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_min_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;jog_acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_max_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_stop_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_LIMSWITCHPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_LIMSWITCHPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_LIMSWITCHPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_LIMSWITCHPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param cw_hard_limit: The operation of the Clockwise hardware limit switch when</span>
+<span class="sd">            contact is made. If value is OR&#39;d with 0x80, then swap cw_hard_limit and</span>
+<span class="sd">            ccw_hard_limit.</span>
+
+<span class="sd">            Values:</span>
+
+<span class="sd">            - 0x01: Ignore switch or switch not present.</span>
+<span class="sd">            - 0x02: Switch makes on contact.</span>
+<span class="sd">            - 0x03: Switch breaks on contact.</span>
+<span class="sd">            - 0x04: Switch makes on contact - only used for homes (e.g. limit switched rotation stages).</span>
+<span class="sd">            - 0x05: Switch breaks on contact - only used for homes (e.g. limit switched rotations stages).</span>
+<span class="sd">            - 0x06 For PMD based brushless servo controllers only - uses index mark for homing.</span>
+
+<span class="sd">        :type cw_hard_limit: int</span>
+<span class="sd">        :param ccw_hard_limit: The operation of the Counter Clockwise hardware limit</span>
+<span class="sd">            switch when contact is made.</span>
+<span class="sd">        :type ccw_hard_limit: int</span>
+<span class="sd">        :param cw_soft_limit: Clockwise software limit in position steps. Not applicable to TDC001.</span>
+<span class="sd">        :type cw_soft_limit: int</span>
+<span class="sd">        :param ccw_soft_limit: Counter Clockwise software limit in position steps. Not applicable to TDC001.</span>
+<span class="sd">        :type ccw_soft_limit: int</span>
+<span class="sd">        :param software_limit_mode: Software limit switch mode</span>
+<span class="sd">        :type software_limit_mode: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x425</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cw_hard_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ccw_hard_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cw_soft_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;ccw_soft_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;software_limit_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_MOVEABSPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_MOVEABSPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_MOVEABSPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_MOVEABSPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param absolute_position: The absolute position to move. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type absolute_position: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x452</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;absolute_position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_MOVERELPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_MOVERELPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_MOVERELPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_MOVERELPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param relative_distance: The distance to move. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type relative_distance: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x447</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;relative_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDCURRENTLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDCURRENTLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDCURRENTLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - phase</span>
+<span class="sd">        - kp_current</span>
+<span class="sd">        - ki_current</span>
+<span class="sd">        - i_lim_current</span>
+<span class="sd">        - i_dead_band</span>
+<span class="sd">        - kff</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4d6</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kp_current&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ki_current&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_lim_current&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;i_dead_band&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kff&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDJOYSTICKPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDJOYSTICKPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDJOYSTICKPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDJOYSTICKPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - js_gear_low_max_vel</span>
+<span class="sd">        - js_gear_high_max_vel</span>
+<span class="sd">        - js_gear_low_accn</span>
+<span class="sd">        - js_gear_high_accn</span>
+<span class="sd">        - dir_sense</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e8</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;js_gear_low_max_vel&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;js_gear_high_max_vel&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;js_gear_low_accn&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;js_gear_high_accn&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;dir_sense&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDMOTOROUTPUTPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDMOTOROUTPUTPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDMOTOROUTPUTPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - cont_current_lim</span>
+<span class="sd">        - energy_lim</span>
+<span class="sd">        - motor_lim</span>
+<span class="sd">        - motor_bias</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4dc</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cont_current_lim&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;energy_lim&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;motor_lim&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;motor_bias&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDPOSITIONLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDPOSITIONLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDPOSITIONLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - kp_pos</span>
+<span class="sd">        - integral</span>
+<span class="sd">        - i_lim_pos</span>
+<span class="sd">        - differential</span>
+<span class="sd">        - kd_time_pos</span>
+<span class="sd">        - k_out_pos</span>
+<span class="sd">        - k_vff_pos</span>
+<span class="sd">        - k_aff_pos</span>
+<span class="sd">        - pos_err_limit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4d9</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kp_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;integral&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_lim_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;differential&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;kd_time_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;k_out_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;k_vff_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;k_aff_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;pos_err_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDPROFILEMODEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDPROFILEMODEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDPROFILEMODEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDPROFILEMODEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode</span>
+<span class="sd">        - jerk</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e5</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jerk&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDSETTLEDCURRENTLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDSETTLEDCURRENTLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDSETTLEDCURRENTLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - phase</span>
+<span class="sd">        - kp_settled</span>
+<span class="sd">        - ki_settled</span>
+<span class="sd">        - i_lim_settled</span>
+<span class="sd">        - dead_band_set</span>
+<span class="sd">        - kff_settled</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4eb</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kp_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ki_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_lim_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;dead_band_set&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kff_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDSTAGEAXISPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDSTAGEAXISPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDSTAGEAXISPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDSTAGEAXISPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - stage_id</span>
+<span class="sd">        - axis_id</span>
+<span class="sd">        - part_no_axis</span>
+<span class="sd">        - serial_num</span>
+<span class="sd">        - cnts_per_unit</span>
+<span class="sd">        - min_pos</span>
+<span class="sd">        - max_pos</span>
+<span class="sd">        - max_accn</span>
+<span class="sd">        - max_dec</span>
+<span class="sd">        - max_vel</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4f2</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;stage_id&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;axis_id&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;part_no_axis&#39;</span><span class="p">,</span> <span class="s1">&#39;16s&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;serial_num&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cnts_per_unit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;min_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_accn&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;max_dec&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_vel&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_PMDTRACKSETTLEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_PMDTRACKSETTLEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_PMDTRACKSETTLEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - time</span>
+<span class="sd">        - settle_window</span>
+<span class="sd">        - track_window</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e2</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;settle_window&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;track_window&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_POSCOUNTER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_POSCOUNTER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_POSCOUNTER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_POSCOUNTER`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param position: The value of the position counter. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type position: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x412</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_POTPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_POTPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_POTPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_POTPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - zero_wnd</span>
+<span class="sd">        - vel1</span>
+<span class="sd">        - wnd1</span>
+<span class="sd">        - vel2</span>
+<span class="sd">        - wnd2</span>
+<span class="sd">        - vel3</span>
+<span class="sd">        - wnd3</span>
+<span class="sd">        - vel4</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b2</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;zero_wnd&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;vel1&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;wnd1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;vel2&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;wnd2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;vel3&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;wnd3&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;vel4&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_POWERPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_POWERPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_POWERPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_GET_POWERPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param rest_factor: The phase power value when the motor is at rest, in the</span>
+<span class="sd">            range 1 to 100 (i.e. 1% to 100% of full power).</span>
+<span class="sd">        :type rest_factor: int</span>
+<span class="sd">        :param move_factor: The phase power value when the motor is moving, in the</span>
+<span class="sd">            range 1 to 100 (i.e. 1% to 100% of full power).</span>
+<span class="sd">        :type move_factor: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x428</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rest_factor&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;move_factor&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_STATUSBITS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_STATUSBITS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_STATUSBITS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_REQ_STATUSBITS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - status_bits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x42a</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;status_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_STATUSUPDATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_STATUSUPDATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_STATUSUPDATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This message is returned when a status update is requested for the</span>
+<span class="sd">        specified motor channel. This request can be used instead of</span>
+<span class="sd">        enabling regular updates as described above.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - position</span>
+<span class="sd">        - enc_count</span>
+<span class="sd">        - status_bits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x481</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;enc_count&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;status_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_TRIGGER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_TRIGGER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_TRIGGER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_TRIGGER`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x502</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_GET_VELPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_GET_VELPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_VELPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_VELPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param min_velocity: The minimum (start) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type min_velocity: int</span>
+<span class="sd">        :param acceleration: The acceleration. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type acceleration: int</span>
+<span class="sd">        :param max_velocity: The maxium (final) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type max_velocity: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x415</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;min_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_ABSOLUTE_long"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_ABSOLUTE_long">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_ABSOLUTE_long</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This command can be used to start a absolute move on the specified</span>
+<span class="sd">        motor channel using the parameter absolute_distance parameter.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param absolute_position: The absolute position to move. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type absolute_position: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x453</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;absolute_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_ABSOLUTE_short"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_ABSOLUTE_short">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_ABSOLUTE_short</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This command can be used to start a absolute move on the specified</span>
+<span class="sd">        motor channel.</span>
+<span class="sd">        The absolute move position used for the move will be the parameter sent</span>
+<span class="sd">        previously by a :class:`MGMSG_MOT_SET_MOVEABSPARAMS` command.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x453</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_COMPLETED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_COMPLETED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_COMPLETED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent by the controller upon completion of a relative or absolute move sequence.</span>
+
+<span class="sd">        The format of this message is the same as the one of</span>
+<span class="sd">        :class:`MGMSG_MOT_GET_STATUSUPDATE` or :class:`MGMSG_MOT_GET_DCSTATUSUPDATE`,</span>
+<span class="sd">        therefore, only common fields are exported.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param position: The position encoder count. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type position: int</span>
+<span class="sd">        :param status_bits: OR&#39;d value of the following bits:</span>
+
+<span class="sd">            - 0x00000001: forward hardware limit switch is active</span>
+<span class="sd">            - 0x00000002: reverse hardware limit switch is active</span>
+<span class="sd">            - 0x00000010: in motion, moving forward</span>
+<span class="sd">            - 0x00000020: in motion, moving reverse</span>
+<span class="sd">            - 0x00000040: in motion, jogging forward</span>
+<span class="sd">            - 0x00000080: in motion, jogging reverse</span>
+<span class="sd">            - 0x00000200: in motion, homing</span>
+<span class="sd">            - 0x00000400: homed (homing has been completed)</span>
+<span class="sd">            - 0x00001000: tracking</span>
+<span class="sd">            - 0x00002000: settled</span>
+<span class="sd">            - 0x00004000: motion error (excessive position error)</span>
+<span class="sd">            - 0x01000000: motor current limit reached</span>
+<span class="sd">            - 0x80000000: channel is enabled</span>
+<span class="sd">        :type status_bits: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x464</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;status_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_HOME"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_HOME">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_HOME</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to start a home move sequence on the specified motor channel</span>
+<span class="sd">        (in accordance with the home parameters above).</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x443</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_HOMED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_HOMED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_HOMED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Message sent upon completion of the :class:`MGMSG_MOT_MOVE_HOME` command.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x444</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_JOG"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_JOG">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_JOG</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to start a jog move on the specified motor channel.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param direction: jog direction (0x01=forward, 0x02=reverse)</span>
+<span class="sd">        :type direction: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x46a</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;direction&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_RELATIVE_long"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_RELATIVE_long">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_RELATIVE_long</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This command can be used to start a relative move on the specified</span>
+<span class="sd">        motor channel using the parameter relative_distance parameter.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param relative_distance: The distance to move. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type relative_distance: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x448</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;relative_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_RELATIVE_short"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_RELATIVE_short">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_RELATIVE_short</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This command can be used to start a relative move on the specified</span>
+<span class="sd">        motor channel (using the relative move distance parameter above).</span>
+<span class="sd">        The relative distance parameter used for the move will be the parameter sent</span>
+<span class="sd">        previously by a :class:`MGMSG_MOT_SET_MOVERELPARAMS` command.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x448</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_STOP"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_STOP">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_STOP</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to stop any type of motor move (relative, absolute, homing or move</span>
+<span class="sd">        at velocity) on the specified motor channel.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param stop_mode: stop mode (0x01: immediately, 0x02: controlled (profiled) manner)</span>
+<span class="sd">        :type stop_mode: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x465</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;stop_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_STOPPED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_STOPPED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_STOPPED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upon completion of the stop move, the controller sends this message.</span>
+
+<span class="sd">        The format of this message is the same as the one of</span>
+<span class="sd">        :class:`MGMSG_MOT_GET_STATUSUPDATE` or :class:`MGMSG_MOT_GET_DCSTATUSUPDATE`,</span>
+<span class="sd">        therefore, only common fields are exported.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param position: The position encoder count. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type position: int</span>
+<span class="sd">        :param status_bits: OR&#39;d value of the following bits:</span>
+
+<span class="sd">            - 0x00000001: forward hardware limit switch is active</span>
+<span class="sd">            - 0x00000002: reverse hardware limit switch is active</span>
+<span class="sd">            - 0x00000010: in motion, moving forward</span>
+<span class="sd">            - 0x00000020: in motion, moving reverse</span>
+<span class="sd">            - 0x00000040: in motion, jogging forward</span>
+<span class="sd">            - 0x00000080: in motion, jogging reverse</span>
+<span class="sd">            - 0x00000200: in motion, homing</span>
+<span class="sd">            - 0x00000400: homed (homing has been completed)</span>
+<span class="sd">            - 0x00001000: tracking</span>
+<span class="sd">            - 0x00002000: settled</span>
+<span class="sd">            - 0x00004000: motion error (excessive position error)</span>
+<span class="sd">            - 0x01000000: motor current limit reached</span>
+<span class="sd">            - 0x80000000: channel is enabled</span>
+<span class="sd">        :type status_bits: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x466</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;status_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_MOVE_VELOCITY"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_MOVE_VELOCITY">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_MOVE_VELOCITY</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This command can be used to start a move on the specified motor channel.</span>
+<span class="sd">        When this method is called, the motor will move continuously in the</span>
+<span class="sd">        specified direction, using the velocity parameters set in the</span>
+<span class="sd">        MGMSG_MOT_SET_MOVEVELPARAMS command until either a stop command</span>
+<span class="sd">        (either StopImmediate or StopProfiled) is called, or a limit switch is</span>
+<span class="sd">        reached.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param direction: move direction (0x01=forward, 0x02=reverse)</span>
+<span class="sd">        :type direction: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x457</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;direction&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_ADCINPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_ADCINPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_ADCINPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This message reads the voltage applied to the analog input on the</span>
+<span class="sd">        rear panel CONTROL IO connector, and returns a value in the</span>
+<span class="sd">        ADCInput1 parameter. The returned value is in the range 0 to</span>
+<span class="sd">        32768, which corresponds to zero to 5 V.</span>
+<span class="sd">        Note. The ADCInput2 parameter is not used at this time.</span>
+<span class="sd">        In this way, a 0 to 5V signal generated by a client system could be</span>
+<span class="sd">        read in by calling this method and monitored by a custom client</span>
+<span class="sd">        application. When the signal reaches a specified value, the</span>
+<span class="sd">        application could instigate further actions, such as a motor move.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x42b</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_AVMODES"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_AVMODES">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_AVMODES</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_AVMODES`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b4</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_BOWINDEX"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_BOWINDEX">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_BOWINDEX</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_BOWINDEX`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4f5</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_BUTTONPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_BUTTONPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_BUTTONPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_BUTTONPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b7</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_DCPIDPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_DCPIDPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_DCPIDPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_GET_DCPIDPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4a1</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_DCSTATUSUPDATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_DCSTATUSUPDATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_DCSTATUSUPDATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to request a status update for the specified motor channel.</span>
+<span class="sd">        This request can be used instead of enabling regular updates as</span>
+<span class="sd">        described above.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x490</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_ENCCOUNTER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_ENCCOUNTER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_ENCCOUNTER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_ENCCOUNTER`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x40a</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_GENMOVEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_GENMOVEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_GENMOVEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_GENMOVEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x43b</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_HOMEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_HOMEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_HOMEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_GET_HOMEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x441</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_JOGPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_JOGPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_JOGPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_JOGPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x417</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_LIMSWITCHPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_LIMSWITCHPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_LIMSWITCHPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_LIMSWITCHPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x424</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_MOVEABSPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_MOVEABSPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_MOVEABSPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_MOVEABSPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x451</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_MOVERELPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_MOVERELPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_MOVERELPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_MOVERELPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x446</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDCURRENTLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDCURRENTLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDCURRENTLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4d5</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDJOYSTICKPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDJOYSTICKPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDJOYSTICKPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDJOYSTICKPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e7</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDMOTOROUTPUTPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDMOTOROUTPUTPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDMOTOROUTPUTPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4db</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDPOSITIONLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDPOSITIONLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDPOSITIONLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4d8</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDPROFILEMODEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDPROFILEMODEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDPROFILEMODEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDPROFILEMODEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e4</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDSETTLEDCURRENTLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDSETTLEDCURRENTLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDSETTLEDCURRENTLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4ea</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDSTAGEAXISPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDSTAGEAXISPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDSTAGEAXISPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDSTAGEAXISPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4f1</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_PMDTRACKSETTLEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_PMDTRACKSETTLEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_PMDTRACKSETTLEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e1</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_POSCOUNTER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_POSCOUNTER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_POSCOUNTER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_POSCOUNTER`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x411</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_POTPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_POTPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_POTPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_POTPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b1</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_POWERPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_POWERPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_POWERPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_GET_POWERPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x427</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_STATUSBITS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_STATUSBITS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_STATUSBITS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to request a “cut down” version of the status update message,</span>
+<span class="sd">        only containing the status bits, without data about position and velocity.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x429</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_STATUSUPDATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_STATUSUPDATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_STATUSUPDATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to request a status update for the specified motor channel.</span>
+<span class="sd">        This request can be used instead of enabling regular updates as</span>
+<span class="sd">        described above.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x480</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_TRIGGER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_TRIGGER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_TRIGGER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_TRIGGER`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x501</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_VELPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_REQ_VELPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_VELPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_VELPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x414</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_RESUME_ENDOFMOVEMSGS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_RESUME_ENDOFMOVEMSGS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_RESUME_ENDOFMOVEMSGS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to resume all unsolicited end of move messages and error</span>
+<span class="sd">        messages returned by the controller, i.e.</span>
+
+<span class="sd">        MGMSG_MOT_MOVE_STOPPED</span>
+<span class="sd">        MGMSG_MOT_MOVE_COMPLETED</span>
+<span class="sd">        MGMSG_MOT_MOVE_HOMED</span>
+
+<span class="sd">        This is the default state when the controller is powered up.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x46c</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_AVMODES"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_AVMODES">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_AVMODES</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The LED on the control keypad can be configured to indicate certain</span>
+<span class="sd">        driver states.</span>
+<span class="sd">        All modes are enabled by default. However, it is recognised that in a light</span>
+<span class="sd">        sensitive environment, stray light from the LED could be undesirable.</span>
+<span class="sd">        Therefore it is possible to enable selectively, one or all of the LED</span>
+<span class="sd">        indicator modes described below by setting the appropriate value in the</span>
+<span class="sd">        Mode Bits parameter.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode_bits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b3</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_BOWINDEX"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_BOWINDEX">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_BOWINDEX</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set bow index (see page 63 of the specs).</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param bow_index: This parameter is used to set the profile mode to either</span>
+<span class="sd">            Trapezoidal or S-curve. A Bow Index of ‘0’ selects a</span>
+<span class="sd">            trapezoidal profile. An index value of ‘1’ to ‘18’ selects an S-</span>
+<span class="sd">            curve profile.</span>
+<span class="sd">        :type bow_index: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4f4</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;bow_index&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_BUTTONPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_BUTTONPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_BUTTONPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The control keypad can be used either to jog the motor, or to perform moves to absolute positions. This function is used to set the front panel button functionality.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode</span>
+<span class="sd">        - position1</span>
+<span class="sd">        - position2</span>
+<span class="sd">        - timeout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b6</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position1&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position2&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_DCPIDPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_DCPIDPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_DCPIDPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the position control loop parameters for the specified</span>
+<span class="sd">        motor channel. See page 66 of the spec.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - proportional</span>
+<span class="sd">        - integral</span>
+<span class="sd">        - differential</span>
+<span class="sd">        - integral_limit</span>
+<span class="sd">        - filter_control</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4a0</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;proportional&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;integral&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;differential&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;integral_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;filter_control&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_EEPROMPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_EEPROMPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_EEPROMPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to save the parameter settings for the specified message.</span>
+<span class="sd">        These settings may have been altered either through the various method calls</span>
+<span class="sd">        or through user interaction with the GUI (specifically, by clicking on the</span>
+<span class="sd">        ‘Settings’ button found in the lower right hand corner of the user</span>
+<span class="sd">        interface).</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - msg_id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b9</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;msg_id&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_ENCCOUNTER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_ENCCOUNTER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_ENCCOUNTER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Similarly to the MGMSG_MOT_SET_POSCOUNTER message described previously,</span>
+<span class="sd">        this message is used to set the encoder count in the controller and is</span>
+<span class="sd">        only applicable to stages and actuators fitted with an encoder. In</span>
+<span class="sd">        general, this command is not normally used. Instead, the stage is</span>
+<span class="sd">        homed immediately after power-up (at this stage the position is</span>
+<span class="sd">        unknown as the stage is free to move when the power is off); and</span>
+<span class="sd">        after the homing process is completed the position counter is</span>
+<span class="sd">        automatically updated to show the actual position. From this point</span>
+<span class="sd">        onwards the encoder counter always shows the actual absolute</span>
+<span class="sd">        position.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param encoder_count: The new value of the encoder counter.</span>
+<span class="sd">        :type encoder_count: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x409</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;encoder_count&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_GENMOVEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_GENMOVEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_GENMOVEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the general move parameters for the specified motor</span>
+<span class="sd">        channel. At this time this refers specifically to the backlash settings.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param backlash_distance: The value of the backlash distance. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type backlash_distance: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x43a</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;backlash_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_HOMEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_HOMEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_HOMEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the home parameters for the specified motor channel.</span>
+<span class="sd">        These parameters are stage specific and for the MLS203 stage</span>
+<span class="sd">        implementation the only parameter that can be changed is the</span>
+<span class="sd">        homing velocity.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param home_direction: Ignored in current implementation (0x01=forward, 0x02=reverse)</span>
+<span class="sd">        :type home_direction: int</span>
+<span class="sd">        :param limit_switch: Ignored in current implementation</span>
+<span class="sd">        :type limit_switch: int</span>
+<span class="sd">        :param home_velocity: The homing velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type home_velocity: int</span>
+<span class="sd">        :param offset_distance: Not used in current implementation. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type offset_distance: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x440</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;home_direction&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;limit_switch&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;home_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;offset_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_JOGPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_JOGPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_JOGPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the velocity jog parameters for the specified motor</span>
+<span class="sd">        channel, For DC servo controllers, values set in encoder counts.</span>
+<span class="sd">        For stepper motor controllers the values is set in microsteps.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param jog_mode: continuous (0x01) or single step (0x02) jogging.</span>
+<span class="sd">        :type jog_mode: int</span>
+<span class="sd">        :param jog_step_size: The jog step size. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_step_size: int</span>
+<span class="sd">        :param jog_min_velocity: The minimum (start) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_min_velocity: int</span>
+<span class="sd">        :param jog_acceleration: The acceleration. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_acceleration: int</span>
+<span class="sd">        :param jog_max_velocity: The maxium (final) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type jog_max_velocity: int</span>
+<span class="sd">        :param jog_stop_mode: abrupt stop (0x01) or profiled stop (0x02).</span>
+<span class="sd">        :type jog_stop_mode: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x416</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_step_size&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_min_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;jog_acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_max_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jog_stop_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_LIMSWITCHPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_LIMSWITCHPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_LIMSWITCHPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the limit switch parameters for the specified motor</span>
+<span class="sd">        channel.</span>
+
+<span class="sd">        These functions are not applicable to BBD10x units</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param cw_hard_limit: The operation of the Clockwise hardware limit switch when</span>
+<span class="sd">            contact is made. If value is OR&#39;d with 0x80, then swap cw_hard_limit and</span>
+<span class="sd">            ccw_hard_limit.</span>
+
+<span class="sd">            Values:</span>
+
+<span class="sd">            - 0x01: Ignore switch or switch not present.</span>
+<span class="sd">            - 0x02: Switch makes on contact.</span>
+<span class="sd">            - 0x03: Switch breaks on contact.</span>
+<span class="sd">            - 0x04: Switch makes on contact - only used for homes (e.g. limit switched rotation stages).</span>
+<span class="sd">            - 0x05: Switch breaks on contact - only used for homes (e.g. limit switched rotations stages).</span>
+<span class="sd">            - 0x06 For PMD based brushless servo controllers only - uses index mark for homing.</span>
+
+<span class="sd">        :type cw_hard_limit: int</span>
+<span class="sd">        :param ccw_hard_limit: The operation of the Counter Clockwise hardware limit</span>
+<span class="sd">            switch when contact is made.</span>
+<span class="sd">        :type ccw_hard_limit: int</span>
+<span class="sd">        :param cw_soft_limit: Clockwise software limit in position steps. Not applicable to TDC001.</span>
+<span class="sd">        :type cw_soft_limit: int</span>
+<span class="sd">        :param ccw_soft_limit: Counter Clockwise software limit in position steps. Not applicable to TDC001.</span>
+<span class="sd">        :type ccw_soft_limit: int</span>
+<span class="sd">        :param software_limit_mode: Software limit switch mode</span>
+<span class="sd">        :type software_limit_mode: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x423</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cw_hard_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ccw_hard_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cw_soft_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;ccw_soft_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;software_limit_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_MOVEABSPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_MOVEABSPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_MOVEABSPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the absolute move parameters for the specified motor</span>
+<span class="sd">        channel. The only significant parameter at this time is the absolute</span>
+<span class="sd">        move position itself. This gets stored by the controller and is used</span>
+<span class="sd">        the next time an absolute move is initiated.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param absolute_position: The absolute position to move. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type absolute_position: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x450</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;absolute_position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_MOVERELPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_MOVERELPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_MOVERELPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the relative move parameters for the specified motor</span>
+<span class="sd">        channel. The only significant parameter at this time is the relative</span>
+<span class="sd">        move distance itself. This gets stored by the controller and is used</span>
+<span class="sd">        the next time a relative move is initiated.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param relative_distance: The distance to move. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type relative_distance: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x445</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;relative_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the current control loop parameters for the specified</span>
+<span class="sd">        motor channel.</span>
+<span class="sd">        The motion processors within the BBD series controllers use digital</span>
+<span class="sd">        current control as a technique to control the current through each</span>
+<span class="sd">        phase winding of the motors. In this way, response times are</span>
+<span class="sd">        improved and motor efficiency is increased. This is achieved by</span>
+<span class="sd">        comparing the required (demanded) current with the actual current</span>
+<span class="sd">        to create a current error, which is then passed through a digital PI-</span>
+<span class="sd">        type filter. The filtered current value is used to develop an output</span>
+<span class="sd">        voltage for each motor coil.</span>
+<span class="sd">        This method sets various constants and limits for the current</span>
+<span class="sd">        feedback loop.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - phase</span>
+<span class="sd">        - kp_current</span>
+<span class="sd">        - ki_current</span>
+<span class="sd">        - i_lim_current</span>
+<span class="sd">        - i_dead_band</span>
+<span class="sd">        - kff</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4d4</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kp_current&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ki_current&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_lim_current&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;i_dead_band&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kff&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDJOYSTICKPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDJOYSTICKPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDJOYSTICKPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The MJC001 joystick console has been designed for use by</span>
+<span class="sd">        microscopists to provide intuitive, tactile, manual positioning of the</span>
+<span class="sd">        stage. The console consists of a two axis joystick for XY control</span>
+<span class="sd">        which features both low and high gear modes. This message is used</span>
+<span class="sd">        to set max velocity and acceleration values for these modes.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - js_gear_low_max_vel</span>
+<span class="sd">        - js_gear_high_max_vel</span>
+<span class="sd">        - js_gear_low_accn</span>
+<span class="sd">        - js_gear_high_accn</span>
+<span class="sd">        - dir_sense</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e6</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;js_gear_low_max_vel&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;js_gear_high_max_vel&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;js_gear_low_accn&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;js_gear_high_accn&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;dir_sense&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set certain limits that can be applied to the motor drive signal.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - cont_current_lim</span>
+<span class="sd">        - energy_lim</span>
+<span class="sd">        - motor_lim</span>
+<span class="sd">        - motor_bias</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4da</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cont_current_lim&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;energy_lim&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;motor_lim&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;motor_bias&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the position control loop parameters for the specified</span>
+<span class="sd">        motor channel.</span>
+<span class="sd">        The motion processors within the BBD series controllers use a</span>
+<span class="sd">        position control loop to determine the motor command output. The</span>
+<span class="sd">        purpose of the position loop is to match the actual motor position</span>
+<span class="sd">        and the demanded position. This is achieved by comparing the</span>
+<span class="sd">        demanded position with the actual encoder position to create a</span>
+<span class="sd">        position error, which is then passed through a digital PID-type filter.</span>
+<span class="sd">        The filtered value is the motor command output.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - kp_pos</span>
+<span class="sd">        - integral</span>
+<span class="sd">        - i_lim_pos</span>
+<span class="sd">        - differential</span>
+<span class="sd">        - kd_time_pos</span>
+<span class="sd">        - k_out_pos</span>
+<span class="sd">        - k_vff_pos</span>
+<span class="sd">        - k_aff_pos</span>
+<span class="sd">        - pos_err_limit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4d7</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kp_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;integral&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_lim_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;differential&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;kd_time_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;k_out_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;k_vff_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;k_aff_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;pos_err_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDPROFILEMODEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDPROFILEMODEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDPROFILEMODEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The system incorporates a trajectory generator, which performs</span>
+<span class="sd">        calculations to determine the instantaneous position, velocity and</span>
+<span class="sd">        acceleration of each axis at any given moment. During a motion</span>
+<span class="sd">        profile, these values will change continuously. Once the move is</span>
+<span class="sd">        complete, these parameters will then remain unchanged until the</span>
+<span class="sd">        next move begins.</span>
+<span class="sd">        The specific move profile created by the system depends on several</span>
+<span class="sd">        factors, such as the profile mode and profile parameters presently</span>
+<span class="sd">        selected, and other conditions such as whether a motion stop has</span>
+<span class="sd">        been requested. This method is used to set the profile mode to</span>
+<span class="sd">        either ‘Trapezoidal’ or ‘S-curve’.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode</span>
+<span class="sd">        - jerk</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e3</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;jerk&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        These commands assist in maintaining stable operation and</span>
+<span class="sd">        reducing noise at the demanded position. They allow the system to</span>
+<span class="sd">        be tuned such that errors caused by external vibration and manual</span>
+<span class="sd">        handling (e.g. loading of samples) are minimized, and are applicable</span>
+<span class="sd">        only when the stage is settled, i.e. the Axis Settled status bit (bit 14)</span>
+<span class="sd">        is set.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - phase</span>
+<span class="sd">        - kp_settled</span>
+<span class="sd">        - ki_settled</span>
+<span class="sd">        - i_lim_settled</span>
+<span class="sd">        - dead_band_set</span>
+<span class="sd">        - kff_settled</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e9</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kp_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ki_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_lim_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;dead_band_set&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;kff_settled&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDSTAGEAXISPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDSTAGEAXISPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDSTAGEAXISPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The REQ and GET commands are used to obtain various parameters</span>
+<span class="sd">        pertaining to the particular stage being driven. Most of these</span>
+<span class="sd">        parameters are inherent in the design of the stage and cannot be</span>
+<span class="sd">        altered. The SET command can only be used to increase the</span>
+<span class="sd">        Minimum position value and decrease the Maximum position value,</span>
+<span class="sd">        thereby reducing the overall travel of the stage.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - stage_id</span>
+<span class="sd">        - axis_id</span>
+<span class="sd">        - part_no_axis</span>
+<span class="sd">        - serial_num</span>
+<span class="sd">        - cnts_per_unit</span>
+<span class="sd">        - min_pos</span>
+<span class="sd">        - max_pos</span>
+<span class="sd">        - max_accn</span>
+<span class="sd">        - max_dec</span>
+<span class="sd">        - max_vel</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4f0</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;stage_id&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;axis_id&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;part_no_axis&#39;</span><span class="p">,</span> <span class="s1">&#39;16s&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;serial_num&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cnts_per_unit&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;min_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_accn&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;max_dec&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_vel&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves are generated by an internal profile generator, and are based</span>
+<span class="sd">        on either a trapezoidal or S-curve trajectory. A move is considered</span>
+<span class="sd">        complete when the profile generator has completed the calculated</span>
+<span class="sd">        move and the axis has &#39;settled&#39; at the demanded position. This</span>
+<span class="sd">        command contains parameters which specify when the system is</span>
+<span class="sd">        settled.</span>
+
+<span class="sd">        See page 81 for details.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - time</span>
+<span class="sd">        - settle_window</span>
+<span class="sd">        - track_window</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4e0</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;settle_window&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;track_window&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_POSCOUNTER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_POSCOUNTER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_POSCOUNTER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the ‘live’ position count in the controller. In general, this</span>
+<span class="sd">        command is not normally used. Instead, the stage is homed</span>
+<span class="sd">        immediately after power-up (at this stage the position is unknown</span>
+<span class="sd">        as the stage is free to move when the power is off); and after the</span>
+<span class="sd">        homing process is completed the position counter is automatically</span>
+<span class="sd">        updated to show the actual position. From this point onwards the</span>
+<span class="sd">        position counter always shows the actual absolute position.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param position: The new value of the position counter. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type position: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x410</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_POTPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_POTPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_POTPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The potentiometer slider on the control panel panel is sprung, such that when released it returns to it’s central position. In this central position the motor is stationary. As the slider is moved away from the center, the motor begins to move; the speed of this movement increases as the slider deflection is increased. Bidirectional control of motor moves is possible by moving the slider in both directions.</span>
+<span class="sd">        The speed of the motor increases by discrete amounts rather than continuously, as a function of slider deflection. These speed settings are defined by 4 pairs of parameters. Each pair specifies a pot deflection value (in the range 0 to 127) together with an associated velocity (set in encoder counts/sec) to be applied at or beyond that deflection. As each successive deflection is reached by moving the pot slider, the next velocity value is applied. These settings are applicable in either direction of pot deflection, i.e. 4 possible velocity settings in the forward or reverse motion directions.</span>
+<span class="sd">        Note. The scaling factor between encoder counts and mm/sec depends on the specific stage/actuator being driven.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - zero_wnd</span>
+<span class="sd">        - vel1</span>
+<span class="sd">        - wnd1</span>
+<span class="sd">        - vel2</span>
+<span class="sd">        - wnd2</span>
+<span class="sd">        - vel3</span>
+<span class="sd">        - wnd3</span>
+<span class="sd">        - vel4</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4b0</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;zero_wnd&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;vel1&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;wnd1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;vel2&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;wnd2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;vel3&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;wnd3&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;vel4&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_POWERPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_POWERPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_POWERPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The power needed to hold a motor in a fixed position is much</span>
+<span class="sd">        smaller than that required for a move. It is good practice to</span>
+<span class="sd">        decrease the power in a stationary motor in order to reduce</span>
+<span class="sd">        heating, and thereby minimize thermal movements caused by</span>
+<span class="sd">        expansion. This message sets a reduction factor for the rest power</span>
+<span class="sd">        and the move power values as a percentage of full power. Typically,</span>
+<span class="sd">        move power should be set to 100% and rest power to a value</span>
+<span class="sd">        significantly less than this.</span>
+
+<span class="sd">        Note for BSC20x, MST602 and TST101 controller users:</span>
+<span class="sd">        If the controllers listed above are used with APTServer, the ini file will typically have values</span>
+<span class="sd">        set of 5 for the rest power and 30 for the move power. Although these values are loaded</span>
+<span class="sd">        when the server boots only the rest power value is used. This allows the user to set the rest</span>
+<span class="sd">        current as normal. The move power however is not used. The move power is set within the</span>
+<span class="sd">        controller as a function of velocity. This command can be used only to set the rest power.</span>
+<span class="sd">        The command MGMSG_MOT_REQ_POWERPARAMS will return the default values or the</span>
+<span class="sd">        values that were set.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param rest_factor: The phase power value when the motor is at rest, in the</span>
+<span class="sd">            range 1 to 100 (i.e. 1% to 100% of full power).</span>
+<span class="sd">        :type rest_factor: int</span>
+<span class="sd">        :param move_factor: The phase power value when the motor is moving, in the</span>
+<span class="sd">            range 1 to 100 (i.e. 1% to 100% of full power).</span>
+<span class="sd">        :type move_factor: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x426</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rest_factor&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;move_factor&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_TRIGGER"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_TRIGGER">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_TRIGGER</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This message is used to configure the Motor controller for triggered</span>
+<span class="sd">        move operation. It is possible to configure a particular controller to</span>
+<span class="sd">        respond to trigger inputs, generate trigger outputs or both respond</span>
+<span class="sd">        to and generate a trigger output. When a trigger input is received,</span>
+<span class="sd">        the unit can be set to initiate a move (relative, absolute or home).</span>
+<span class="sd">        Similarly the unit can be set to generate a trigger output signal when</span>
+<span class="sd">        a specified event (e.g move initiated) occurs. For those units</span>
+<span class="sd">        configured for both input and output triggering, a move can be</span>
+<span class="sd">        initiated via a trigger input while at the same time, a trigger output</span>
+<span class="sd">        can be generated to initiate a move on another unit.</span>
+<span class="sd">        The trigger settings can be used to configure multiple units in a</span>
+<span class="sd">        master – slave set up, thereby allowing multiple channels of motion</span>
+<span class="sd">        to be synchronized. Multiple moves can then be initiated via a single</span>
+<span class="sd">        software or hardware trigger command.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - mode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x500</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_TSTACTUATORTYPE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_TSTACTUATORTYPE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_TSTACTUATORTYPE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This command is for use only with the TST101 driver, and is used to</span>
+<span class="sd">        define an actuator type so that the TST driver knows the effective</span>
+<span class="sd">        length of the stage. This information is used if a user wishes to home</span>
+<span class="sd">        the stage to the far travel end. In this case, once the stage is homed</span>
+<span class="sd">        the APT GUI count will be set to the far travel value. For example, in</span>
+<span class="sd">        the case of a ZFS25 the user will see 25mm once homed. The TST</span>
+<span class="sd">        holds this value as a number of Trinamic microsteps, which will be a</span>
+<span class="sd">        function of the gearbox ratio, the lead screw pitch, and the motor</span>
+<span class="sd">        type. So for example the number stored in the TST for the ZFS25 is</span>
+<span class="sd">        54613333.</span>
+
+<span class="sd">        - actuator_ident</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x4fe</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;actuator_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_VELPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SET_VELPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_VELPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set the trapezoidal velocity parameters for the specified</span>
+<span class="sd">        motor channel. For DC servo controllers, the velocity is set in</span>
+<span class="sd">        encoder counts/sec and acceleration is set in encoder counts/sec/sec.</span>
+
+<span class="sd">        For stepper motor controllers the velocity is set in microsteps/sec</span>
+<span class="sd">        and acceleration is set in microsteps/sec/sec.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param min_velocity: The minimum (start) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type min_velocity: int</span>
+<span class="sd">        :param acceleration: The acceleration. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type acceleration: int</span>
+<span class="sd">        :param max_velocity: The maxium (final) velocity. Conversion should be done</span>
+<span class="sd">            as in :class:`~thorpy.stages.GenericStage`.</span>
+<span class="sd">        :type max_velocity: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x413</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;min_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;max_velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SUSPEND_ENDOFMOVEMSGS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.motorcontrol.MGMSG_MOT_SUSPEND_ENDOFMOVEMSGS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SUSPEND_ENDOFMOVEMSGS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to disable all unsolicited end of move messages and error</span>
+<span class="sd">        messages returned by the controller, i.e.</span>
+
+<span class="sd">        MGMSG_MOT_MOVE_STOPPED</span>
+<span class="sd">        MGMSG_MOT_MOVE_COMPLETED</span>
+<span class="sd">        MGMSG_MOT_MOVE_HOMED</span>
+
+<span class="sd">        The command also disables the error messages that the controller</span>
+<span class="sd">        sends when an error conditions is detected:</span>
+
+<span class="sd">        MGMSG_HW_RESPONSE</span>
+<span class="sd">        MGMSG_HW_RICHRESPONSE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x46b</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.message.motorcontrol</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Laurent Fasnacht.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

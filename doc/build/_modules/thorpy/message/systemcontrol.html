@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thorpy.message.systemcontrol &#8212; thorpy 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.message.systemcontrol</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for thorpy.message.systemcontrol</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">Message</span>
+
+
+<span class="c1">##### Generic System Control Messages #####</span>
+<div class="viewcode-block" id="MGMSG_HUB_GET_BAYUSED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HUB_GET_BAYUSED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HUB_GET_BAYUSED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_HUB_REQ_BAYUSED`.</span>
+
+<span class="sd">        :param bay_ident: bay identifier (0x01 to 0x06, for bay 1 to bay 6)</span>
+<span class="sd">        :type bay_ident: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x66</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;bay_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HUB_REQ_BAYUSED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HUB_REQ_BAYUSED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HUB_REQ_BAYUSED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to determine which bay a specific T-Cube is fitted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x65</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_DISCONNECT"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_DISCONNECT">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_DISCONNECT</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent by the hardware unit or host when either wants to disconnect</span>
+<span class="sd">        from the Ethernet/USB bus.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x2</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_GET_INFO"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_GET_INFO">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_GET_INFO</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_HW_REQ_INFO`.</span>
+
+<span class="sd">        :param serial_number: unique 8-digit serial number</span>
+<span class="sd">        :type serial_number: int</span>
+<span class="sd">        :param model_number: alphanumeric model number</span>
+<span class="sd">        :type: model_number: string</span>
+<span class="sd">        :param type: hardware type (not really documented)</span>
+<span class="sd">        :type type: int</span>
+<span class="sd">        :param firmware_version: firmware version</span>
+
+<span class="sd">            - byte 0 = minor revision number</span>
+<span class="sd">            - byte 1 = interim revision number</span>
+<span class="sd">            - byte 2 = major revision number</span>
+<span class="sd">            - byte 3 = unused</span>
+
+<span class="sd">        :type firmware_version: bytes</span>
+<span class="sd">        :param notes: arbitrary alphanumeric information string (48 bytes)</span>
+<span class="sd">        :type notes: string</span>
+<span class="sd">        :param empty_space: ironically, not an empty space. Contain undocumented</span>
+<span class="sd">            information which helps identifying the connected stage. See</span>
+<span class="sd">            :func:`~thorpy.stages.stage_name_from_get_hw_info` for the reversed</span>
+<span class="sd">            engineered algorithm.</span>
+<span class="sd">        :type empty_space: bytes</span>
+<span class="sd">        :param hw_version: the hardware version number</span>
+<span class="sd">        :type hw_version: int</span>
+<span class="sd">        :param mod_state: the modification state of the hardware</span>
+<span class="sd">        :type mod_state: int</span>
+<span class="sd">        :param nchs: number of channels</span>
+<span class="sd">        :type nchs: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x6</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;serial_number&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;model_number&#39;</span><span class="p">,</span> <span class="s1">&#39;8s&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;firmware_version&#39;</span><span class="p">,</span> <span class="s1">&#39;4s&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;notes&#39;</span><span class="p">,</span> <span class="s1">&#39;48s&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;empty_space&#39;</span><span class="p">,</span> <span class="s1">&#39;12s&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;hw_version&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mod_state&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;nchs&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_REQ_INFO"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_REQ_INFO">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_REQ_INFO</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to request hardware information from the controller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x5</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_RESPONSE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_RESPONSE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_RESPONSE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent by the controllers to notify APT Server of some event that</span>
+<span class="sd">        requires user intervention, usually some fault or error condition that</span>
+<span class="sd">        needs to be handled before normal operation can resume. The</span>
+<span class="sd">        message transmits the fault code as a numerical value – see Return</span>
+<span class="sd">        Codes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x80</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_RICHRESPONSE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_RICHRESPONSE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_RICHRESPONSE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Similarly to :class:`MGMSG_HW_RESPONSE`, this message is sent by the</span>
+<span class="sd">        controllers to notify APT Server of some event that requires user</span>
+<span class="sd">        intervention, usually some fault or error condition that needs to be</span>
+<span class="sd">        handled before normal operation can resume. However unlike</span>
+<span class="sd">        :class:`MGMSG_HW_RESPONSE`, this message also transmits a printable text string.</span>
+<span class="sd">        Upon receiving the message, APT Server displays both the numerical</span>
+<span class="sd">        value and the text information, which is useful in finding the cause</span>
+<span class="sd">        of the problem.</span>
+
+<span class="sd">        :param msg_ident: If the message is sent in response to an APT message, these</span>
+<span class="sd">            bytes show the APT message number that evoked the</span>
+<span class="sd">            message. Most often though the message is transmitted as</span>
+<span class="sd">            a result of some unexpected fault condition, in which case</span>
+<span class="sd">            these bytes are 0x00, 0x00</span>
+<span class="sd">        :type msg_ident: int</span>
+<span class="sd">        :param code: This is an internal Thorlabs specific code that specifies the</span>
+<span class="sd">            condition that has caused the message (see Return Codes).</span>
+<span class="sd">        :type code: int</span>
+<span class="sd">        :param notes: This is a zero-terminated printable (ascii) text string that</span>
+<span class="sd">            contains the textual information about the condition that</span>
+<span class="sd">            has occurred. For example: “Hardware Time Out Error”.</span>
+<span class="sd">        :type notes: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x81</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;msg_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;notes&#39;</span><span class="p">,</span> <span class="s1">&#39;64s&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_START_UPDATEMSGS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_START_UPDATEMSGS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_START_UPDATEMSGS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to start status updates from the embedded controller. Status</span>
+<span class="sd">        update messages contain information about the position and status</span>
+<span class="sd">        of the controller (for example limit switch status, motion indication,</span>
+<span class="sd">        etc). The messages will be sent by the controller periodically until it</span>
+<span class="sd">        receives a :class:`MGMSG_HW_STOP_UPDATEMSGS` command. In</span>
+<span class="sd">        applications where spontaneous messages (i.e. messages which are</span>
+<span class="sd">        not received as a response to a specific command) must be avoided</span>
+<span class="sd">        the same information can also be obtained by using the relevant</span>
+<span class="sd">        :class:`~thorpy.message.motorcontrol.MGMSG_MOT_GET_STATUSUPDATE` or</span>
+<span class="sd">        :class:`~thorpy.message.motorcontrol.MGMSG_MOT_GET_DCSTATUSUPDATE` message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x11</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;update_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_HW_STOP_UPDATEMSGS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_HW_STOP_UPDATEMSGS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_HW_STOP_UPDATEMSGS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to stop status updates from the controller – usually called by a</span>
+<span class="sd">        client application when it is shutting down, to instruct the controller</span>
+<span class="sd">        to turn off status updates to prevent USB buffer overflows on the</span>
+<span class="sd">        PC.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x12</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_GET_CHANENABLESTATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_GET_CHANENABLESTATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_GET_CHANENABLESTATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOD_SET_CHANENABLESTATE`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param chan_enable_state: is channel enabled (0x01: enable, 0x02: disable)</span>
+<span class="sd">        :type chan_enable_state: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x212</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;chan_enable_state&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_GET_DIGOUTPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_GET_DIGOUTPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_GET_DIGOUTPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOD_SET_DIGOUTPUTS`.</span>
+
+<span class="sd">        :param bits:</span>
+<span class="sd">        :type bits: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x215</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;bits&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_IDENTIFY"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_IDENTIFY">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_IDENTIFY</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instruct hardware unit to identify itself (by flashing its front panel</span>
+<span class="sd">        LEDs).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x223</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_REQ_CHANENABLESTATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_REQ_CHANENABLESTATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_REQ_CHANENABLESTATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOD_SET_CHANENABLESTATE`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x211</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_REQ_DIGOUTPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_REQ_DIGOUTPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_REQ_DIGOUTPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOD_SET_DIGOUTPUTS`.</span>
+
+<span class="sd">        :param bits:</span>
+<span class="sd">        :type bits: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x214</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;bits&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_SET_CHANENABLESTATE"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_SET_CHANENABLESTATE">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_SET_CHANENABLESTATE</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to enable or disable the specified drive channel.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        :param chan_enable_state: is channel enabled (0x01: enable, 0x02: disable)</span>
+<span class="sd">        :type chan_enable_state: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x210</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;chan_enable_state&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOD_SET_DIGOUTPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_MOD_SET_DIGOUTPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOD_SET_DIGOUTPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The CONTROL IO connector on the rear panel of the unit exposes a</span>
+<span class="sd">        number of digital outputs. The number of outputs available depends</span>
+<span class="sd">        on the type of unit. This message is used to configure these digital</span>
+<span class="sd">        outputs.</span>
+
+<span class="sd">        :param bits:</span>
+<span class="sd">        :type bits: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x213</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;bits&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_GET_BAYUSED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_GET_BAYUSED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_GET_BAYUSED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_RACK_REQ_BAYUSED`.</span>
+
+<span class="sd">        :param bay_ident: bay identifier (0x01 to 0x09, for bay 1 to bay 9)</span>
+<span class="sd">        :type bay_ident: int</span>
+<span class="sd">        :param bay_state: bay state (0x01: occopied, 0x02: empty, unused)</span>
+<span class="sd">        :type bay_state: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x61</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;bay_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;bay_state&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_GET_DIGOUTPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_GET_DIGOUTPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_GET_DIGOUTPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_RACK_SET_DIGOUTPUTS`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x230</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_GET_STATUSBITS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_GET_STATUSBITS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_GET_STATUSBITS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_RACK_REQ_STATUSBITS`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x227</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;sstatus_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_REQ_BAYUSED"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_REQ_BAYUSED">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_REQ_BAYUSED</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sent to determine whether the specified bay in the controller is</span>
+<span class="sd">        occupied.</span>
+
+<span class="sd">        :param bay_ident: bay identifier (0x01 to 0x09, for bay 1 to bay 9)</span>
+<span class="sd">        :type bay_ident: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x60</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;bay_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_REQ_DIGOUTPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_REQ_DIGOUTPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_REQ_DIGOUTPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_RACK_SET_DIGOUTPUTS`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x229</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_REQ_STATUSBITS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_REQ_STATUSBITS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_REQ_STATUSBITS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is applicable only to the MMR modular rack, and 2- and 3-channel card slot</span>
+<span class="sd">        type controllers such as the BSC103 and BPC202.</span>
+
+<span class="sd">        The USER IO connector on the rear panel of these units exposes a</span>
+<span class="sd">        number of digital inputs. This function returns a number of status</span>
+<span class="sd">        flags pertaining to the status of the inputs on the rack modules, or</span>
+<span class="sd">        the motherboard of the controller unit hosting the single channel</span>
+<span class="sd">        controller card.</span>
+<span class="sd">        These flags are returned in a single 32 bit integer parameter and can</span>
+<span class="sd">        provide additional useful status information for client application</span>
+<span class="sd">        development. The individual bits (flags) of the 32 bit integer value</span>
+<span class="sd">        correspond to digital output state.</span>
+
+<span class="sd">        :param status_bits: The status bits for the associated controller channel.</span>
+
+<span class="sd">            - bit 1: Digital output 1 state (1 - logic high, 0 - logic low).</span>
+<span class="sd">            - bit 2: Digital output 1 state (1 - logic high, 0 - logic low).</span>
+<span class="sd">            - bit 3: Digital output 1 state (1 - logic high, 0 - logic low).</span>
+<span class="sd">            - bit 4: Digital output 1 state (1 - logic high, 0 - logic low).</span>
+
+<span class="sd">        :type status_bits: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x226</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;status_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_RACK_SET_DIGOUTPUTS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.systemcontrol.MGMSG_RACK_SET_DIGOUTPUTS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_RACK_SET_DIGOUTPUTS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is applicable only to the MMR rack modules, and 2- and 3-channel card slot</span>
+<span class="sd">        type controllers such as the BSC103 and BPC202.</span>
+
+<span class="sd">        The USER IO connector on the rear panel of these units exposes a</span>
+<span class="sd">        number of digital outputs. These functions set and return the status</span>
+<span class="sd">        of the outputs on the rack modules, or the motherboard of the</span>
+<span class="sd">        controller unit hosting the single channel controller card.</span>
+<span class="sd">        These flags are returned in a single 32 bit integer parameter and can</span>
+<span class="sd">        provide additional useful status information for client application</span>
+<span class="sd">        development. The individual bits (flags) of the 32 bit integer value</span>
+<span class="sd">        are described below.</span>
+
+<span class="sd">        .. todo::</span>
+<span class="sd">            Not sure exactly how it behaves. Fix if we have access to the hardware!</span>
+
+<span class="sd">        :param dig_op:</span>
+<span class="sd">        :type dig_op: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x228</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;dig_op&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.message.systemcontrol</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Laurent Fasnacht.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

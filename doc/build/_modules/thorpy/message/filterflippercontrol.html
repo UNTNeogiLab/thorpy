@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thorpy.message.filterflippercontrol &#8212; thorpy 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.message.filterflippercontrol</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for thorpy.message.filterflippercontrol</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">Message</span>
+
+
+<span class="c1">##### Filter Flipper Control Messages #####</span>
+<div class="viewcode-block" id="MGMSG_MOT_GET_MFF_OPERPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.filterflippercontrol.MGMSG_MOT_GET_MFF_OPERPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_GET_MFF_OPERPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_MFF_OPERPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - i_transit_time</span>
+<span class="sd">        - i_transit_time_adc</span>
+<span class="sd">        - oper_mode_1</span>
+<span class="sd">        - sig_mode_1</span>
+<span class="sd">        - pulse_width_1</span>
+<span class="sd">        - oper_mode_2</span>
+<span class="sd">        - sig_mode_2</span>
+<span class="sd">        - pulse_width_2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x512</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_transit_time&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_transit_time_adc&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;oper_mode_1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;sig_mode_1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;pulse_width_1&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;oper_mode_2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;sig_mode_2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;pulse_width_2&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_REQ_MFF_OPERPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.filterflippercontrol.MGMSG_MOT_REQ_MFF_OPERPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_REQ_MFF_OPERPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :class:`MGMSG_MOT_SET_MFF_OPERPARAMS`.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x511</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MGMSG_MOT_SET_MFF_OPERPARAMS"><a class="viewcode-back" href="../../../apimessages.html#thorpy.message.filterflippercontrol.MGMSG_MOT_SET_MFF_OPERPARAMS">[docs]</a><span class="k">class</span> <span class="nc">MGMSG_MOT_SET_MFF_OPERPARAMS</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to set various operating parameters that dictate the function of the</span>
+<span class="sd">        MFF series flipper unit.</span>
+
+<span class="sd">        :param chan_ident: channel number (0x01, 0x02)</span>
+<span class="sd">        :type chan_ident: int</span>
+<span class="sd">        - i_transit_time</span>
+<span class="sd">        - i_transit_time_adc</span>
+<span class="sd">        - oper_mode_1</span>
+<span class="sd">        - sig_mode_1</span>
+<span class="sd">        - pulse_width_1</span>
+<span class="sd">        - oper_mode_2</span>
+<span class="sd">        - sig_mode_2</span>
+<span class="sd">        - pulse_width_2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mh">0x510</span>
+    <span class="n">is_long_cmd</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;chan_ident&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_transit_time&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i_transit_time_adc&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;oper_mode_1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;sig_mode_1&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;pulse_width_1&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;oper_mode_2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;sig_mode_2&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s1">&#39;pulse_width_2&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)]</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">thorpy 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">thorpy.message.filterflippercontrol</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Laurent Fasnacht.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>
